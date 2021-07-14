@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glii.ddbackmanage.mapper.DeptMapper">
+
+    <sql id="Base_Column_List">
+        DEPT_ID,PARENT_ID,DEPT_NAME,ORDER_NUM,CREATE_TIME,MODIFY_TIME
+    </sql>
+
+    <select id="findDeptsByDeptIdIn" parameterType="list" resultType="com.glii.ddbackmanage.entity.Dept">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_dept
+        WHERE DEPT_ID IN
+        <foreach collection="list" index="index" item="deptId" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </select>
+
+    <select id="findDeptList" resultType="com.glii.ddbackmanage.entity.Dept">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_dept
+    </select>
+
+</mapper>

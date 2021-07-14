@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label layui-form-label-sm">手机</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="mobile" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label layui-form-label-sm">性别</label>
+                            <div class="layui-input-inline">
+                                <select name="ssex">
+                                    <option value=""></option>
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                    <option value="2">保密</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label layui-form-label-sm">部门</label>
+                            <div class="layui-input-inline" id="dept">
+<!--                                <select name="deptId">-->
+<!--                                    <option value=""></option>-->
+<!--                                    <option th:each="dept:${depts}" th:value="${dept?.getDeptId()}" th:text="${dept?.getDeptName()}" >开发部</option>-->
+<!--                                </select>-->
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label layui-form-label-sm">状态</label>
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value=""></option>
+                                    <option value="0">禁用</option>
+                                    <option value="1">正常</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label layui-form-label-sm">创建时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="createTime" id="date-scope" class="layui-input" placeholder="请选择时间">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+<script type="text/html" id="user-status">
+    <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="锁定|正常" lay-filter="enable" {{ d.status =='1' ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="user-sex">
+    {{#
+    let sex = {
+    2: {title: '保密'},
+    1: {title: '女'},
+    0: {title: '男'}
+    }[d.sex];
+    }}
+    <span>{{ sex.title }}</span>
+</script>
+<script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="/js/lay-config.js?v=1.4.5" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table','laydate','xmSelect'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            laydate = layui.laydate,
+            xmSelect = layui.xmSelect,
+            deptXmlSelect,
+            createTimeFrom,
+            createTimeTo;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/sys/users',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.status, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            request: {
+                pageName: 'page', //页码的参数名称，默认：page
+                limitName: 'limit' //每页数据量的参数名，默认：limit
+            },
+            response: {
+                statusName: 'code' //规定数据状态的字段名称，默认：code
+                ,statusCode: 200 //规定成功的状态码，默认：0
+                ,msgName: 'msg' //规定状态信息的字段名称，默认：msg
+                ,countName: 'count' //规定数据总数的字段名称，默认：count
+                ,dataName: 'data' //规定数据列表的字段名称，默认：data
+            },
+            cols: [
+                [
+                {type: 'checkbox'},
+                {field: 'id', title: '编码', minWidth: 50, hide: true},
+                {field: 'username', title: '用户名', minWidth: 100},
+                {title: '性别', templet: '#user-sex'},
+                {field: 'deptName', title: '部门'},
+                {field: 'mobile', title: '手机', minWidth: 150},
+                {field: 'email', title: '邮箱', minWidth: 150},
+                {title: '状态', width: 100, align: 'center', templet: '#user-status'},
+                {field: 'createTime', title: '创建时间', minWidth: 160, sort: true},
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true,
+            skin: 'line'
+        });
+
+        deptXmlSelect = xmSelect.render({
+            el: '#dept',
+            model: {label: {type: 'text'}},
+            tree: {
+                show: true,
+                strict: false,
+                showLine: false,
+                clickCheck: true,
+                expandedKeys: [-1],
+            },
+            name: 'deptId',
+            theme: {
+                color: '#52c41a',
+            },
+            prop: {
+                value: 'id'
+            },
+            height: 'auto',
+            on: function(data){
+                if(data.isAdd){
+                    return data.change.slice(0, 1)
+                }
+            }
+        })
+
+        $.get("/dept/select/tree", null, function (data) {
+            deptXmlSelect.update(data);
+        });
+
+        //日期时间范围
+        laydate.render({
+            elem: '#date-scope',
+            range: true,
+            trigger: 'click'
+        });
+
+        form.on('switch(enable)', function(obj){
+            // console.log(obj);
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+
+            var id = this.value
+            $.ajax({
+                url: "/user/"+id,
+                type: "put",
+                dataType: "json",
+                data: {status: obj.elem.checked},
+                success: function (data) {
+                    if (data.status >= 200) {
+                        //TODO 需要考虑失败情况的处理
+                        //更新失败
+                        layer.msg(data.msg);
+                        return;
+                    } else {
+                        //更新成功
+                        layer.msg(data.msg);
+                        // $(obj.elem).prop('checked',!obj.elem.checked) //修改switch开关
+                    }
+                }
+            });
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            // layer.alert(result, {
+            //     title: '最终的搜索信息'
+            // });
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: getQueryParams()
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '/user_add',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+
+                var index = layer.open({
+                    title: '编辑用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '../page/table/edit.html',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            }
+        });
+
+        //获取搜索参数
+        function getQueryParams() {
+            var params = {};
+            var createTime = $("input[name='createTime']").val();
+            if (createTime) {
+                createTimeFrom = createTime.split(' - ')[0];
+                createTimeTo = createTime.split(' - ')[1];
+            }
+
+            deptId = deptXmlSelect.getValue('valueStr');
+
+            params.createTimeFrom = createTimeFrom;
+            params.createTimeTo = createTimeTo;
+            params.username = $("input[name='username']").val();
+            params.mobile = $("input[name='mobile']").val();
+            params.ssex = $("select[name='ssex']").val();
+            params.deptId = deptId;
+            params.status = $("select[name='status']").val();
+            console.log(params);
+            return params;
+        }
+
+    });
+</script>
+
+</body>
+</html>

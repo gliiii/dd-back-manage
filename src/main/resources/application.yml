@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/dd_back_manage?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+    username: root
+    password: 123456
+  thymeleaf:
+    cache: false
+  mvc:
+    format:
+      date: yyyy-MM-dd
+#  # 配置日期格式化,支支持json格式转化
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss  #时间戳统一转换为指定格式
+#    time-zone: GMT+8  # 时区修改为东8区
+server:
+  port: 8085
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com.glii.ddbackmanage.mapper: debug

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glii.ddbackmanage.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.glii.ddbackmanage.entity.User">
+        <id column="USER_ID" property="userId"/>
+        <result column="USERNAME" property="username"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="DEPT_ID" property="deptId"/>
+        <result column="EMAIL" property="email"/>
+        <result column="MOBILE" property="mobile"/>
+        <result column="STATUS" property="status"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="MODIFY_TIME" property="modifyTime"/>
+        <result column="LAST_LOGIN_TIME" property="lastLoginTime"/>
+        <result column="SSEX" property="ssex"/>
+        <result column="IS_TAB" property="isTab"/>
+        <result column="THEME" property="theme"/>
+        <result column="AVATAR" property="avatar"/>
+        <result column="DESCRIPTION" property="description"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        USER_ID
+        ,USERNAME,PASSWORD,DEPT_ID,EMAIL,MOBILE,STATUS,CREATE_TIME,MODIFY_TIME,LAST_LOGIN_TIME,SSEX,THEME,AVATAR,DESCRIPTION
+    </sql>
+
+    <!--查询用户列表-->
+    <select id="findUserList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE
+        1=1
+        <if test="user.username !=null and user.username !=''">
+            AND USERNAME LIKE CONCAT('%',#{user.username},'%')
+        </if>
+        <if test="user.deptId !=null and user.deptId !=''">
+            AND DEPT_ID = #{user.deptId}
+        </if>
+        <if test="user.mobile !=null and user.mobile !=''">
+            AND MOBILE = #{user.mobile}
+        </if>
+        <if test="user.status !=null and user.status !=''">
+            AND STATUS = #{user.status}
+        </if>
+        <if test="user.createTimeFrom !=null and user.createTimeFrom !=''">
+            AND CREATE_TIME &gt; #{user.createTimeFrom}
+        </if>
+        <if test="user.createTimeTo !=null and user.createTimeTo !=''">
+            AND CREATE_TIME &lt; #{user.createTimeTo}
+        </if>
+        <if test="user.ssex !=null and user.ssex !=''">
+            AND SSEX = #{user.ssex}
+        </if>
+        LIMIT #{rowIndex},#{pageSize}
+    </select>
+
+    <!--查询用户总数-->
+    <select id="findUsersCount" resultType="Integer">
+        SELECT count(1)
+        FROM t_user
+    </select>
+
+    <!--根据用户id更新用户状态-->
+    <update id="updateUserStatusById" parameterType="java.lang.Integer">
+        UPDATE t_user
+        <set>
+            <if test="userId !=null and userId !=''">
+                STATUS = #{status}
+            </if>
+        </set>
+        WHERE USER_ID = #{userId}
+    </update>
+</mapper>
