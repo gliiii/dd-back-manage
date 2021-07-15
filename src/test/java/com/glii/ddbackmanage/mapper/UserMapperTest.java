@@ -6,7 +6,9 @@ import com.glii.ddbackmanage.form.UserForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 class UserMapperTest extends DdBackManageApplicationTests {
 
@@ -31,6 +33,36 @@ class UserMapperTest extends DdBackManageApplicationTests {
     @Test
     void updateUserStatusById() {
         Integer result = userMapper.updateUserStatusById(2, "1");
+        System.out.println(result);
+    }
+
+    @Test
+    void insertUser() {
+        User user = new User();
+        user.setUsername("ligen");
+        user.setPassword("123456");
+        user.setStatus("1");
+        user.setCreateTime(new Date());
+        Integer result = userMapper.insertUser(user);
+        System.out.println(result);
+        System.out.println(user);
+    }
+
+    @Test
+    void findUserById() {
+        User user = userMapper.findUserById(24L);
+        System.out.println(user);
+    }
+
+    @Test
+    void updateUser() {
+        User user = new User();
+        Date date = new Date();
+        user.setUserId(24L);
+        user.setLastLoginTime(date);
+        user.setModifyTime(date);
+        user.setDescription(String.valueOf(new Random().nextInt(10)+1));
+        Integer result = userMapper.updateUser(user);
         System.out.println(result);
     }
 }

@@ -28,4 +28,25 @@ public interface UserMapper {
      * @return
      */
     Integer updateUserStatusById(@Param("userId") Integer userId, @Param("status") String status);
+
+    /**
+     * 新增用户
+     * @param user
+     * @return
+     */
+    Integer insertUser(User user);
+
+    /**
+     * 根据用户id查询用户信息
+     * @param userId
+     * @return
+     */
+    User findUserById(Long userId);
+
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
+    Integer updateUser(@Param("user") User user);
 }

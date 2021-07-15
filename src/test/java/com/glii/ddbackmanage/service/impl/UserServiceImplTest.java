@@ -30,4 +30,32 @@ class UserServiceImplTest extends DdBackManageApplicationTests {
         Integer result = userService.updateUserStatus(3, "0");
         System.out.println(result);
     }
+
+    @Test
+    void addUser() {
+        UserForm user = new UserForm();
+        user.setUsername("ligen");
+        user.setDeptId(2L);
+        user.setSsex("1");
+        user.setStatus("1");
+        user.setMobile("13177050000");
+        user.setEmail("123@123.com");
+        Integer result = userService.addUser(user);
+        System.out.println(result);
+    }
+
+    @Test
+    void findUserById() {
+        UserVO user = userService.findUserById(24L);
+        System.out.println(user);
+    }
+
+    @Test
+    void updateUser() {
+        UserForm userForm = new UserForm();
+        userForm.setUserId(24L);
+        userForm.setEmail("789@789.com");
+        Integer result = userService.updateUser(userForm);
+        System.out.println(result);
+    }
 }

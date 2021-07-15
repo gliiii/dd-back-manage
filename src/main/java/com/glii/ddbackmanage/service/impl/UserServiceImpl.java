@@ -7,6 +7,7 @@ import com.glii.ddbackmanage.mapper.DeptMapper;
 import com.glii.ddbackmanage.mapper.UserMapper;
 import com.glii.ddbackmanage.pojo.QueryRequst;
 import com.glii.ddbackmanage.service.UserService;
+import com.glii.ddbackmanage.utils.Md5Util;
 import com.glii.ddbackmanage.utils.PageCalculatorUtil;
 import com.glii.ddbackmanage.vo.UserVO;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,5 +64,36 @@ public class UserServiceImpl implements UserService {
     public Integer updateUserStatus(Integer userId, String status) {
         //TODO 考虑更新失败返回？
         return userMapper.updateUserStatusById(userId, status);
+    }
+
+    @Override
+    public Integer addUser(UserForm userForm) {
+        User user = new User();
+        BeanUtils.copyProperties(userForm,user);
+        user.setCreateTime(new Date());
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setTheme(User.THEME_BLACK);
+        user.setIsTab(User.TAB_OPEN);
+        user.setPassword(Md5Util.encrypt(user.getUsername(), User.DEFAULT_PASSWORD));
+        return userMapper.insertUser(user);
+    }
+
+    @Override
+    public UserVO findUserById(Long userId) {
+        UserVO userVO = new UserVO();
+        User user = userMapper.findUserById(userId);
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
+
+    }
+
+    @Override
+    public Integer updateUser(UserForm userForm) {
+        User user = new User();
+        Date now = new Date();
+        BeanUtils.copyProperties(userForm, user);
+        user.setModifyTime(now);
+        //TODO 对于失败异常情况的处理
+        return userMapper.updateUser(user);
     }
 }

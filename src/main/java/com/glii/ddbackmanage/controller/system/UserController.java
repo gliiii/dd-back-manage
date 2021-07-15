@@ -30,4 +30,19 @@ public class UserController {
         userService.updateUserStatus(userId, statusStr=status?"1":"0");
         return ResultVOUtil.success();
     }
+
+    @PostMapping("/user")
+    public ResultVO addUser(UserForm userForm) {
+        //TODO 考虑处理失败情况
+        userService.addUser(userForm);
+        return ResultVOUtil.success();
+    }
+
+    @PutMapping("/user")
+    public ResultVO updateUser(@RequestBody UserForm userForm) {
+        //TODO 考虑失败情况处理
+        userService.updateUser(userForm);
+        return ResultVOUtil.success();
+    }
+
 }

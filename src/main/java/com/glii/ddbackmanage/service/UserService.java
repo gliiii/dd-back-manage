@@ -9,11 +9,11 @@ import java.util.List;
 public interface UserService {
     /**
      * 查询用户信息列表
-     * @param user
+     * @param userForm
      * @param query
      * @return
      */
-    List<UserVO> findUserDetailList(UserForm user, QueryRequst query);
+    List<UserVO> findUserDetailList(UserForm userForm, QueryRequst query);
 
     /**
      * 查询用户总数
@@ -29,4 +29,24 @@ public interface UserService {
      */
     Integer updateUserStatus(Integer userId, String status);
 
+    /**
+     * 新增用户
+     * @param userForm
+     * @return
+     */
+    Integer addUser(UserForm userForm);
+
+    /**
+     * 根据用户id查询用户信息
+     * @param userId
+     * @return
+     */
+    UserVO findUserById(Long userId);
+
+    /**
+     * 更新用户
+     * @param userForm
+     * @return
+     */
+    Integer updateUser(UserForm userForm);
 }

@@ -54,6 +54,7 @@
         <if test="user.ssex !=null and user.ssex !=''">
             AND SSEX = #{user.ssex}
         </if>
+        ORDER BY CREATE_TIME DESC
         LIMIT #{rowIndex},#{pageSize}
     </select>
 
@@ -72,5 +73,100 @@
             </if>
         </set>
         WHERE USER_ID = #{userId}
+    </update>
+
+    <!--新增用户-->
+    <insert id="insertUser" parameterType="com.glii.ddbackmanage.entity.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">USER_ID,</if>
+            <if test="username != null">USERNAME,</if>
+            <if test="password !=null">PASSWORD,</if>
+            <if test="deptId !=null">DEPT_ID,</if>
+            <if test="email !=null">EMAIL,</if>
+            <if test="mobile !=null">MOBILE,</if>
+            <if test="status !=null">STATUS,</if>
+            <if test="createTime !=null">CREATE_TIME,</if>
+            <if test="modifyTime !=null">MODIFY_TIME,</if>
+            <if test="lastLoginTime !=null">LAST_LOGIN_TIME,</if>
+            <if test="ssex !=null">SSEX,</if>
+            <if test="isTab !=null">IS_TAB,</if>
+            <if test="theme !=null">THEME,</if>
+            <if test="avatar !=null">AVATAR,</if>
+            <if test="description !=null">DESCRIPTION,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId !=null">#{userId},</if>
+            <if test="username !=null">#{username},</if>
+            <if test="password !=null">#{password},</if>
+            <if test="deptId !=null">#{deptId},</if>
+            <if test="email !=null">#{email},</if>
+            <if test="mobile !=null">#{mobile},</if>
+            <if test="status !=null">#{status},</if>
+            <if test="createTime !=null">#{createTime},</if>
+            <if test="modifyTime !=null">#{modifyTime},</if>
+            <if test="lastLoginTime !=null">#{lastLoginTime},</if>
+            <if test="ssex !=null">#{ssex},</if>
+            <if test="isTab !=null">#{isTab},</if>
+            <if test="theme !=null">#{theme},</if>
+            <if test="avatar !=null">#{avatar},</if>
+            <if test="description !=null">#{description},</if>
+        </trim>
+    </insert>
+
+    <!--根据用户id查询用户信息-->
+    <select id="findUserById" parameterType="java.lang.Long" resultType="com.glii.ddbackmanage.entity.User">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE
+            USER_ID = #{userId}
+    </select>
+
+    <!--更新用户-->
+    <update id="updateUser" parameterType="com.glii.ddbackmanage.entity.User">
+        UPDATE t_user
+        <set>
+            <if test="user.username !=null and user.username !=''">
+                USERNAME = #{user.username},
+            </if>
+            <if test="user.password !=null and user.password !=''">
+                PASSWORD = #{user.password},
+            </if>
+            <if test="user.deptId !=null and user.deptId !=''">
+                DEPT_ID = #{user.deptId},
+            </if>
+            <if test="user.email !=null and user.email !=''">
+                EMAIL = #{user.email},
+            </if>
+            <if test="user.mobile !=null and user.mobile !=''">
+                MOBILE = #{user.mobile},
+            </if>
+            <if test="user.status !=null and user.status !=''">
+                STATUS = #{user.status},
+            </if>
+            <if test="user.modifyTime !=null">
+                MODIFY_TIME = #{user.modifyTime},
+            </if>
+            <if test="user.lastLoginTime !=null">
+                LAST_LOGIN_TIME = #{user.lastLoginTime},
+            </if>
+            <if test="user.ssex !=null and user.ssex !=''">
+                SSEX = #{user.ssex},
+            </if>
+            <if test="user.isTab !=null and user.isTab !=''">
+                IS_TAB = #{user.isTab},
+            </if>
+            <if test="user.theme !=null and user.theme !=''">
+                THEME = #{user.theme},
+            </if>
+            <if test="user.avatar !=null and user.avatar !=''">
+                AVATAR = #{user.avatar},
+            </if>
+            <if test="user.description !=null and user.description !=''">
+                DESCRIPTION = #{user.description}
+            </if>
+        </set>
+        WHERE USER_ID = #{user.userId}
     </update>
 </mapper>
