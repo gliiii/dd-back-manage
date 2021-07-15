@@ -96,4 +96,14 @@ public class UserServiceImpl implements UserService {
         //TODO 对于失败异常情况的处理
         return userMapper.updateUser(user);
     }
+
+    @Override
+    public Integer deleteUserById(Long userId) {
+        return userMapper.deleteUserById(userId);
+    }
+
+    @Override
+    public Integer deleteUserByIds(Long[] userIds) {
+        return userMapper.deleteUserByIds(userIds);
+    }
 }

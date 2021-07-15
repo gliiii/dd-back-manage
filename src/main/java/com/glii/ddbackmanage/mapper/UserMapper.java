@@ -49,4 +49,18 @@ public interface UserMapper {
      * @return
      */
     Integer updateUser(@Param("user") User user);
+
+    /**
+     * 根据用户id删除用户
+     * @param userId
+     * @return
+     */
+    Integer deleteUserById(Long userId);
+
+    /**
+     * 批量删除用户
+     * @param userIds
+     * @return
+     */
+    Integer deleteUserByIds(Long[] userIds);
 }

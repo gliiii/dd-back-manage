@@ -65,4 +65,17 @@ class UserMapperTest extends DdBackManageApplicationTests {
         Integer result = userMapper.updateUser(user);
         System.out.println(result);
     }
+
+    @Test
+    void deleteUserById() {
+        Integer result = userMapper.deleteUserById(2L);
+        System.out.println(result);
+    }
+
+    @Test
+    void deleteUserByIds() {
+        Long[] ids = {5L, 6L};
+        Integer result = userMapper.deleteUserByIds(ids);
+        System.out.println(result);
+    }
 }

@@ -104,14 +104,16 @@
     <span>{{ sex.title }}</span>
 </script>
 <script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="/js/lay-config.js?v=1.4.5" charset="utf-8"></script>
+<script src="/js/lay-config.js?v=1.4.6" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table','laydate','xmSelect'], function () {
+    layui.use(['form', 'table','laydate','xmSelect','popup','common'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
+            popup = layui.popup,
             laydate = layui.laydate,
             xmSelect = layui.xmSelect,
+            common = layui.common,
             deptXmlSelect,
             createTimeFrom,
             createTimeTo;
@@ -261,9 +263,34 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                // var checkStatus = table.checkStatus('currentTableId')
+                //     , data = checkStatus.data;
+                // layer.alert(JSON.stringify(data));
+                let ids = common.checkField(obj,'id');
+                if (common.isEmpty(ids)) {
+                    popup.warning("未选中数据");
+                    return false;
+                }
+                layer.confirm('确定要删除选中用户', {icon: 3, title: '提示'}, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/users/" + ids,
+                        dataType: 'json',
+                        type: 'delete',
+                        success: function (data) {
+                            layer.close(loading);
+                            if (data.status >= 200) {
+                                popup.failure(data.msg);
+                            } else {
+                                    popup.success(data.msg,function(){
+                                    table.reload('currentTableId');
+                                })
+                            }
+                        }
+                    })
+                });
+
             }
         });
 
@@ -290,8 +317,26 @@
                 return false;
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
                     layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/user/"+obj.data['id'],
+                        dataType: 'json',
+                        type: 'delete',
+                        success:function(data){
+                            layer.close(loading);
+                            if (data.status >= 200) {
+                                popup.failure(data.msg);
+                            } else {
+                                obj.del();
+                                popup.success(data.msg,function(){
+                                });
+                            }
+                        }
+                    })
+
+
+
                 });
             }
         });

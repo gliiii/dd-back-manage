@@ -45,4 +45,15 @@ public class UserController {
         return ResultVOUtil.success();
     }
 
+    @DeleteMapping("/user/{id}")
+    public ResultVO deleteUser(@PathVariable("id") Long userId) {
+        userService.deleteUserById(userId);
+        return ResultVOUtil.success();
+    }
+
+    @DeleteMapping("/users/{ids}")
+    public ResultVO deleteUsers(@PathVariable("ids") Long[] userIds) {
+        userService.deleteUserByIds(userIds);
+        return ResultVOUtil.success();
+    }
 }

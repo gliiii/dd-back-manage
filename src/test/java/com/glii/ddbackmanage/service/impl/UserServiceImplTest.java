@@ -58,4 +58,16 @@ class UserServiceImplTest extends DdBackManageApplicationTests {
         Integer result = userService.updateUser(userForm);
         System.out.println(result);
     }
+
+    @Test
+    void deleteUserById() {
+        Integer result = userService.deleteUserById(3L);
+        System.out.println(result);
+    }
+
+    @Test
+    void deleteUserByIds() {
+        Integer result = userService.deleteUserByIds(new Long[]{1L, 2L});
+        System.out.println(result);
+    }
 }
