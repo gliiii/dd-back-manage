@@ -47,5 +47,10 @@ public class PageController {
         return mv;
     }
 
+    @GetMapping("/menu")
+    public String menu() {
+        return "pages/menu/table-menu";
+    }
+
 
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.glii.ddbackmanage.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.glii.ddbackmanage.entity.Menu">
+        <id column="MENU_ID" jdbcType="DECIMAL" property="menuId" />
+        <result column="PARENT_ID" jdbcType="DECIMAL" property="parentId" />
+        <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
+        <result column="URL" jdbcType="VARCHAR" property="url" />
+        <result column="PERMS" jdbcType="VARCHAR" property="perms" />
+        <result column="ICON" jdbcType="VARCHAR" property="icon" />
+        <result column="TYPE" jdbcType="CHAR" property="type" />
+        <result column="ORDER_NUM" jdbcType="DECIMAL" property="orderNum" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        MENU_ID
+        ,PARENT_ID,MENU_NAME,URL,PERMS,ICON,TYPE,ORDER_NUM,CREATE_TIME,MODIFY_TIME
+    </sql>
+
+    <select id="findMenuList" parameterType="com.glii.ddbackmanage.entity.Menu" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+            t_menu
+        <where>
+            <if test="parentId!=null">
+                and parent_id = #{parentId}
+            </if>
+        </where>
+        ORDER BY ORDER_NUM
+    </select>
+
+</mapper>

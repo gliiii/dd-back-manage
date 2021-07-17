@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>menu</title>
+    <link rel="stylesheet" href="/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+    <style>
+        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+<!--        <blockquote class="layui-elem-quote">-->
+<!--            Layui的树形表格treeTable，支持异步加载(懒加载)、复选框联动、折叠状态记忆。<br>-->
+<!--            <a href="https://gitee.com/whvse/treetable-lay" target="_blank" class="layui-btn layui-btn-danger">treetable-lay</a>-->
+<!--        </blockquote>-->
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权限名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon layui-icon-search"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-refresh"></i> 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table id="munu-table" class="layui-table" lay-filter="munuTableFilter"></table>
+
+    </div>
+</div>
+
+<script type="text/html" id="menu-toolbar">
+    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加权限 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="expand"> 全部展开 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-warm data-delete-btn" lay-event="fold"> 全部折叠 </button>
+</script>
+
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="icon">
+    <i class="layui-icon {{d.icon}}"></i>
+</script>
+
+<script type="text/html" id="menu-type">
+    {{#if (d.type == '0') { }}
+    <span>目录</span>
+    {{# }else if(d.type == '1'){ }}
+    <span>菜单</span>
+    {{# }else if(d.type == '2'){ }}
+    <span>按钮</span>
+    {{# } }}
+</script>
+
+<script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        layer.load(2);
+        window.render = function () {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'menuId',
+                treePidName: 'parentId',
+                elem: '#munu-table',
+                treeDefaultClose: true,
+                url: '/menu/tree',
+                toolbar: '#menu-toolbar',
+                page: false,
+                cols: [
+                    [
+                        {type: 'checkbox'},
+                        {field: 'menuName', minWidth: 200, title: '权限名称'},
+                        {field: 'perms', title: '权限标识'},
+                        {field: 'url', title: '菜单url'},
+                        {field: 'icon', title: '图标', templet: '#icon'},
+                        {field: 'type', title: '权限类型', templet: '#menu-type'},
+                        {field: 'orderNum', title: '排序'},
+                        {templet: '#auth-state', width: 120, align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        }
+
+        render();
+
+        table.on('toolbar(munuTableFilter)', function (obj) {debugger
+            if (obj.event === 'add') {
+                window.add();
+            } else if (obj.event === 'expand') {
+                treetable.expandAll('#munu-table');
+            } else if (obj.event === 'fold') {
+                treetable.foldAll('#munu-table');
+            }
+        });
+
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['450px', '500px'],
+                content: '/menu'
+            });
+        }
+
+
+        //监听工具条
+        table.on('tool(munuTableFilter)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.msg('删除' + data.id);
+            } else if (layEvent === 'edit') {
+                layer.msg('修改' + data.id);
+            }
+        });
+    });
+</script>
+</body>
+</html>

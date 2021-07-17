@@ -28,14 +28,14 @@
               "target": "_self"
             },
             {
-              "title": "角色管理",
-              "href": "page/welcome-2.html",
+              "title": "菜单管理",
+              "href": "/menu",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },
             {
-              "title": "菜单管理",
-              "href": "page/welcome-3.html",
+              "title": "角色管理",
+              "href": "page/welcome-2.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },
