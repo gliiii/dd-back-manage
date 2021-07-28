@@ -1,9 +1,11 @@
 package com.glii.ddbackmanage.controller;
 
 import com.glii.ddbackmanage.service.DeptService;
+import com.glii.ddbackmanage.service.MenuService;
 import com.glii.ddbackmanage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +18,9 @@ public class PageController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MenuService menuService;
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -52,5 +57,15 @@ public class PageController {
         return "pages/menu/table-menu";
     }
 
+    @GetMapping("/menu_add")
+    public String menu_add() {
+        return "pages/menu/menu-add";
+    }
+
+    @GetMapping("/menu_edit")
+    public String menu_edit(Model model, Long menuId){
+        model.addAttribute("menu", menuService.findMenuById(menuId));
+        return "pages/menu/menu-edit";
+    }
 
 }

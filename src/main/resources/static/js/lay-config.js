@@ -30,4 +30,5 @@ layui.config({
     xmSelect: 'xmSelect/xm-select', //多级下拉框
     popup: 'popup/popup', //弹出窗
     common: 'common/common', //公共模块
+    dtree: 'dtree/dtree', //树型组件
 });

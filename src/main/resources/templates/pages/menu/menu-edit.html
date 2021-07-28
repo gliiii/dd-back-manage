@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="/js/lay-module/dtree/font/dtreefont.css" media="all">
     <link rel="stylesheet" href="/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
     <style>
-        .layui-iconpicker-body.layui-iconpicker-body-page .hide {display: none;}
-    </style>
-    <style>
         body {
             background-color: #ffffff;
         }
@@ -22,6 +19,7 @@
 </head>
 <body>
 <form class="layui-form" lay-filter="menu-form">
+    <input type="hidden" name="menuId" th:value="${menu.menuId}">
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
             <label class="layui-form-label required">上级菜单：</label>
@@ -32,39 +30,39 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="menuName" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入权限名称" value="" class="layui-input">
+                <input type="text" name="menuName" th:value="${menu.menuName}" lay-verify="required" lay-reqtext="权限名称不能为空" placeholder="请输入权限名称" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">类型：</label>
             <div class="layui-input-block">
-                <input type="radio" name="type" lay-filter="menu-type" value="0" title="目录">
-                <input type="radio" name="type" lay-filter="menu-type" value="1" title="菜单" checked="">
-                <input type="radio" name="type" lay-filter="menu-type" value="2" title="按钮">
+                <input type="radio" name="type" lay-filter="menu-type" value="0" th:checked="${menu.type == '0'}" title="目录">
+                <input type="radio" name="type" lay-filter="menu-type" value="1" th:checked="${menu.type == '1'}" title="菜单">
+                <input type="radio" name="type" lay-filter="menu-type" value="2" th:checked="${menu.type == '2'}" title="按钮">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">图标：</label>
             <div class="layui-input-block">
-                <input type="text" name="icon" id="iconPicker" lay-filter="iconPicker" class="hide">
+                <input type="text" name="icon" th:value="${menu.icon}" id="iconPicker" lay-filter="iconPicker" class="hide">
             </div>
         </div>
         <div class="layui-form-item" id="url-input">
             <label class="layui-form-label">URL：</label>
             <div class="layui-input-block">
-                <input type="text" name="url" autocomplete="off" class="layui-input">
+                <input type="text" name="url" th:value="${menu.url}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item" id="perms-input">
             <label class="layui-form-label">权限：</label>
             <div class="layui-input-block">
-                <input type="perms" name="perms" autocomplete="off" class="layui-input">
+                <input type="perms" name="perms" th:value="${menu.perms}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item" id="orderNum-input">
             <label class="layui-form-label">排序：</label>
             <div class="layui-input-block">
-                <input type="tel" name="orderNum" lay-verify="required" autocomplete="off" class="layui-input">
+                <input type="tel" name="orderNum" th:value="${menu.orderNum}" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -78,34 +76,37 @@
 </form>
 <script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="/js/lay-config.js?v=1.4.5" charset="utf-8"></script>
-<script>
+<script th:inline="javascript">
     layui.use(['form', 'jquery', 'dtree', 'iconPickerFa'], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let dtree = layui.dtree;
         let iconPickerFa = layui.iconPickerFa;
 
-        //监听提交
         form.on('submit(saveBtn)', function (data) {
-            // data.field.icon = "layui-icon " + data.field.icon;
-            $.post("/menu", data.field, function (data) {
-                if (data.status >= 300) {
-                    layer.msg(data.msg);//失败的表情
-                    return;
-                } else {
-                    layer.msg("申请提交成功", {
-                        icon: 6,//成功的表情
-                        time: 500 //1秒关闭（如果不配置，默认是3秒）
-                    },function(){
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
-                        parent.render();
-                    })
+            $.ajax({
+                url: '/menu',
+                type: 'put',
+                dataType: 'json',
+                data: data.field,
+                success: function (data) {
+                    if (data.status >= 300) {
+                        layer.msg(data.msg);//失败的表情
+                        return;
+                    } else {
+                        layer.msg("申请提交成功", {
+                            icon: 6,//成功的表情
+                            time: 500 //1秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                            parent.render();
+                        })
+                    }
                 }
-            });
+            })
             return false;
         });
 
-        //监听radio
         form.on("radio(menu-type)", function (data) {debugger
             let type = data.value;
             form.val("menu-form", {
@@ -137,7 +138,7 @@
             skin: "layui",
             dataFormat: "list",
             response: {treeId: "menuId", parentId: "parentId", title: "menuName"},  //修改response中返回数据的定义
-            // selectInitVal: "0",
+            selectInitVal: '[[${menu.parentId}]]'
         });
 
         iconPickerFa.render({
@@ -160,9 +161,6 @@
                 console.log(d);
             }
         });
-
-        iconPickerFa.checkIcon('iconPicker', 'fa-adjust');
-
     });
 </script>
 </body>

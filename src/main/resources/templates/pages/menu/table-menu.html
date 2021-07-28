@@ -28,7 +28,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">权限名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="menuName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -57,9 +57,9 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-<script type="text/html" id="icon">
-    <i class="layui-icon {{d.icon}}"></i>
-</script>
+<!--<script type="text/html" id="icon">-->
+<!--    <i class="fa {{d.icon}}"></i>-->
+<!--</script>-->
 
 <script type="text/html" id="menu-type">
     {{#if (d.type == '0') { }}
@@ -74,10 +74,13 @@
 <script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
 <script>
-    layui.use(['table', 'treetable'], function () {
+    layui.use(['table', 'treetable','common','popup','form'], function () {
         var $ = layui.jquery;
         var table = layui.table;
         var treetable = layui.treetable;
+        var common = layui.common;
+        var popup = layui.popup;
+        var form = layui.form;
 
         // 渲染表格
         layer.load(2);
@@ -98,7 +101,7 @@
                         {field: 'menuName', minWidth: 200, title: '权限名称'},
                         {field: 'perms', title: '权限标识'},
                         {field: 'url', title: '菜单url'},
-                        {field: 'icon', title: '图标', templet: '#icon'},
+                        {field: 'icon', title: '图标'},
                         {field: 'type', title: '权限类型', templet: '#menu-type'},
                         {field: 'orderNum', title: '排序'},
                         {templet: '#auth-state', width: 120, align: 'center', title: '操作'}
@@ -112,7 +115,7 @@
 
         render();
 
-        table.on('toolbar(munuTableFilter)', function (obj) {debugger
+        table.on('toolbar(munuTableFilter)', function (obj) {
             if (obj.event === 'add') {
                 window.add();
             } else if (obj.event === 'expand') {
@@ -127,23 +130,82 @@
                 type: 2,
                 title: '新增',
                 shade: 0.1,
-                area: ['450px', '500px'],
-                content: '/menu'
+                area: ['500px', '500px'],
+                content: '/menu_add'
             });
         }
 
+        window.edit = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['500px', '500px'],
+                // content: '/menu_edit?menuId=' + obj.data['menuId']
+                content: "/menu_edit?menuId="+obj.data['menuId']
+            });
+        }
+
+        //搜索
+        form.on('submit(data-search-btn)', function (data) {
+            var keyword = data.field.menuName;
+            var $tds = $('#munu-table').next('.treeTable').find('.layui-table-body tbody tr td');
+            if (!keyword) {
+                $tds.css('background-color', 'transparent');
+                layer.msg("请输入关键字", {icon: 5});
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                $(this).css('background-color', 'transparent');
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        $('body,html').stop(true);
+                        $('body,html').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            } else {
+                treetable.expandAll('#munu-table');
+            }
+            return false;
+        });
 
         //监听工具条
         table.on('tool(munuTableFilter)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
-
             if (layEvent === 'del') {
-                layer.msg('删除' + data.id);
+                layer.confirm('真的删除行么', function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/menu/"+obj.data['id'],
+                        dataType: 'json',
+                        type: 'delete',
+                        success:function(data){
+                            layer.close(loading);
+                            if (data.status >= 200) {
+                                popup.failure(data.msg);
+                            } else {
+                                obj.del();
+                                popup.success(data.msg,function(){
+                                });
+                            }
+                        }
+                    })
+                });
+
+
             } else if (layEvent === 'edit') {
-                layer.msg('修改' + data.id);
+                window.edit(obj);
             }
         });
+
     });
 </script>
 </body>

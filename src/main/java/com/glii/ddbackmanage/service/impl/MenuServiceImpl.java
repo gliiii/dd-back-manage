@@ -18,4 +18,24 @@ public class MenuServiceImpl implements MenuService {
     public List<Menu> findMenuList(@Param("menu") Menu menu) {
         return menuMapper.findMenuList(menu);
     }
+
+    @Override
+    public Integer addMenu(Menu menu) {
+        return menuMapper.insertMenu(menu);
+    }
+
+    @Override
+    public Menu findMenuById(Long menuId) {
+        return menuMapper.findMenuById(menuId);
+    }
+
+    @Override
+    public Integer updateMenu(Menu menu) {
+        return menuMapper.updateMenu(menu);
+    }
+
+    @Override
+    public Integer deleteMenu(Long menuId) {
+        return menuMapper.deleteMenuById(menuId);
+    }
 }

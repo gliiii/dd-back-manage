@@ -9,6 +9,7 @@ public class TreeUtil {
 
     private static final String TOP_NODE_ID = "0";
 
+
     public static <T> List<DeptTree<T>> buildDeptTree(List<DeptTree<T>> nodes) {
         if (nodes == null) {
             return null;

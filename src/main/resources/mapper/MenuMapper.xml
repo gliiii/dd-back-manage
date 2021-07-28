@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.glii.ddbackmanage.mapper.MenuMapper">
     <resultMap id="BaseResultMap" type="com.glii.ddbackmanage.entity.Menu">
-        <id column="MENU_ID" jdbcType="DECIMAL" property="menuId" />
-        <result column="PARENT_ID" jdbcType="DECIMAL" property="parentId" />
+        <id column="MENU_ID" jdbcType="BIGINT" property="menuId" />
+        <result column="PARENT_ID" jdbcType="BIGINT" property="parentId" />
         <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
         <result column="URL" jdbcType="VARCHAR" property="url" />
         <result column="PERMS" jdbcType="VARCHAR" property="perms" />
         <result column="ICON" jdbcType="VARCHAR" property="icon" />
         <result column="TYPE" jdbcType="CHAR" property="type" />
-        <result column="ORDER_NUM" jdbcType="DECIMAL" property="orderNum" />
+        <result column="ORDER_NUM" jdbcType="BIGINT" property="orderNum" />
         <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
         <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
     </resultMap>
@@ -19,6 +19,7 @@
         ,PARENT_ID,MENU_NAME,URL,PERMS,ICON,TYPE,ORDER_NUM,CREATE_TIME,MODIFY_TIME
     </sql>
 
+    <!--查询菜单-->
     <select id="findMenuList" parameterType="com.glii.ddbackmanage.entity.Menu" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -32,4 +33,74 @@
         ORDER BY ORDER_NUM
     </select>
 
+    <!--新增菜单-->
+    <insert id="insertMenu" parameterType="com.glii.ddbackmanage.entity.Menu">
+        INSERT INTO t_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId !=null">PARENT_ID,</if>
+            <if test="menuName !=null">MENU_NAME,</if>
+            <if test="url !=null">URL,</if>
+            <if test="perms !=null">PERMS,</if>
+            <if test="icon !=null">ICON,</if>
+            <if test="type !=null">`TYPE`,</if>
+            <if test="orderNum !=null">ORDER_NUM,</if>
+            <if test="createTime !=null">CREATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId !=null">#{parentId},</if>
+            <if test="menuName !=null">#{menuName},</if>
+            <if test="url !=null">#{url},</if>
+            <if test="perms !=null">#{perms},</if>
+            <if test="icon !=null">#{icon},</if>
+            <if test="type !=null">#{type},</if>
+            <if test="orderNum !=null">#{orderNum},</if>
+            <if test="createTime !=null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <!--根据菜单id查询菜单信息-->
+    <select id="findMenuById" parameterType="java.lang.Long" resultType="com.glii.ddbackmanage.entity.Menu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_menu
+        WHERE
+        MENU_ID = #{menuId}
+    </select>
+
+    <update id="updateMenu">
+        UPDATE t_menu
+        <set>
+            <if test="parentId !=null">
+                PARENT_ID = #{parentId},
+            </if>
+            <if test="menuName !=null">
+                MENU_NAME = #{menuName},
+            </if>
+            <if test="url !=null">
+                URL = #{url},
+            </if>
+            <if test="perms !=null">
+                PERMS = #{perms},
+            </if>
+            <if test="icon !=null">
+                ICON = #{icon},
+            </if>
+            <if test="type !=null">
+                `TYPE` = #{type},
+            </if>
+            <if test="orderNum !=null">
+                ORDER_NUM = #{orderNum},
+            </if>
+            <if test="modifyTime !=null">
+                MODIFY_TIME =#{modifyTime}
+            </if>
+        </set>
+        WHERE MENU_ID = #{menuId}
+    </update>
+
+    <!--删除菜单-->
+    <delete id="deleteMenuById">
+        DELETE FROM t_menu
+        WHERE MENU_ID = #{menuId}
+    </delete>
 </mapper>
