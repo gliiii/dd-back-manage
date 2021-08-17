@@ -1,5 +1,6 @@
 package com.glii.ddbackmanage.service;
 
+import com.glii.ddbackmanage.dto.MenuTree;
 import com.glii.ddbackmanage.entity.Menu;
 
 import java.util.List;
@@ -12,6 +13,13 @@ public interface MenuService {
      * @return
      */
     List<Menu> findMenuList(Menu menu);
+
+    /**
+     * 查找所有的菜单/按钮 （树形结构）
+     * @param menu
+     * @return
+     */
+    MenuTree<Menu> findEleMenus(Menu menu);
 
     /**
      * 新增菜单
@@ -36,7 +44,7 @@ public interface MenuService {
 
     /**
      * 删除菜单
-     * @param menu
+     * @param menuId
      * @return
      */
     Integer deleteMenu(Long menuId);

@@ -35,7 +35,7 @@
             },
             {
               "title": "角色管理",
-              "href": "page/welcome-2.html",
+              "href": "/role",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },

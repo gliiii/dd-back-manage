@@ -31,4 +31,5 @@ layui.config({
     popup: 'popup/popup', //弹出窗
     common: 'common/common', //公共模块
     dtree: 'dtree/dtree', //树型组件
+    eleTree: 'eleTree/eleTree', //ele树型组件
 });

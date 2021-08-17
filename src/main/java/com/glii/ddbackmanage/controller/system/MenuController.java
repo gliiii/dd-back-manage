@@ -1,5 +1,6 @@
 package com.glii.ddbackmanage.controller.system;
 
+import com.glii.ddbackmanage.dto.MenuTree;
 import com.glii.ddbackmanage.entity.Menu;
 import com.glii.ddbackmanage.service.MenuService;
 import com.glii.ddbackmanage.utils.ResultVOUtil;
@@ -22,6 +23,13 @@ public class MenuController {
     public ResultVO getMenuTree(Menu menu) {
         List<Menu> menuList = menuService.findMenuList(menu);
         return ResultVOUtil.success(menuList);
+    }
+
+    @GetMapping("/eletree")
+    public ResultVO getMenuEleTree(Menu menu) {
+        MenuTree<Menu> eleMenus = menuService.findEleMenus(menu);
+        List<MenuTree<Menu>> childs = eleMenus.getChilds();
+        return ResultVOUtil.success(childs);
     }
 
     @GetMapping("selectParent")

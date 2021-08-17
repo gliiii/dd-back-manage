@@ -68,4 +68,13 @@ public class PageController {
         return "pages/menu/menu-edit";
     }
 
+    @GetMapping("/role")
+    public String role() {
+        return "pages/role/table-role";
+    }
+
+    @GetMapping("/role_add")
+    public String role_add() {
+        return "pages/role/role-add";
+    }
 }

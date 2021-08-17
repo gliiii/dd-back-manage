@@ -1,8 +1,8 @@
 package com.glii.ddbackmanage.service;
 
-import com.glii.ddbackmanage.entity.Role;
 import com.glii.ddbackmanage.form.RoleForm;
 import com.glii.ddbackmanage.pojo.QueryRequst;
+import com.glii.ddbackmanage.vo.RoleVO;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface RoleService {
      * @param query
      * @return
      */
-    List<Role> findRoleDetailList(RoleForm roleForm, QueryRequst query);
+    List<RoleVO> findRoleDetailList(RoleForm roleForm, QueryRequst query);
 
     /**
      * 查询角色总数

@@ -9,28 +9,37 @@
         <result column="REMARK" property="remark"/>
         <result column="CREATE_TIME" property="createTime"/>
         <result column="MODIFY_TIME" property="modifyTime"/>
+        <result column="MENU_IDS" property="menuIds"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        ROLE_ID,ROLE_NAME,REMARK,CREATE_TIME,MODIFY_TIME
+        ROLE_ID,ROLE_NAME,REMARK,CREATE_TIME,MODIFY_TIME,MENU_IDS
     </sql>
 
     <!--查询角色列表-->
     <select id="findRoleList" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_role
-        WHERE
-        1=1
-        <if test="role.roleName !=null and role.roleName !=''">
-            AND ROLENAME LIKE CONCAT('%',#{role.roleName},'%')
+        r.role_id ROLE_ID,
+        r.role_name ROLE_NAME,
+        r.remark,
+        r.create_time CREATE_TIME,
+        r.modify_time MODIFY_TIME,
+        GROUP_CONCAT( rm.menu_id ) MENU_IDS
+        FROM
+        t_role r
+        LEFT JOIN t_role_menu rm ON ( r.role_id = rm.role_id )
+        WHERE 1 = 1
+        <if test="role.roleName != null and role.roleName != ''">
+            AND r.role_name like CONCAT('%',#{role.roleName},'%')
         </if>
-        ORDER BY CREATE_TIME DESC
+        GROUP BY
+        r.role_id
+        ORDER BY r.create_time DESC
         LIMIT #{rowIndex},#{pageSize}
     </select>
 
     <!--查询角色总数-->
-    <select id="findRolesCount" resultType="Integer">
+    <select id="findRoleCount" resultType="Integer">
         SELECT count(1)
         FROM t_role
     </select>
