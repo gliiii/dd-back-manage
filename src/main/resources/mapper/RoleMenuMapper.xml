@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glii.ddbackmanage.mapper.RoleMenuMapper">
+    <resultMap id="BaseResultMap" type="com.glii.ddbackmanage.entity.RoleMenu">
+        <id column="ROLE_ID" property="roleId"/>
+        <result column="MENU_ID" property="menuId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ROLE_ID,MENU_ID
+    </sql>
+
+    <!--批量新增角色-->
+    <insert id="batchInsertRoleMenu" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="roleId">
+        INSERT INTO t_role_menu
+        (ROLE_ID, MENU_ID)
+        VALUES
+        <foreach collection ="list" item="item" separator =",">
+            (#{item.roleId}, #{item.menuId})
+        </foreach >
+    </insert>
+
+
+</mapper>

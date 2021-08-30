@@ -20,4 +20,11 @@ public interface RoleService {
      * @return
      */
     int findRsCount();
+
+    /**
+     * 新增角色
+     * @param roleForm
+     * @return
+     */
+    void addRole(RoleForm roleForm);
 }

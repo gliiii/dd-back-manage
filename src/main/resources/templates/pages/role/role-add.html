@@ -74,6 +74,44 @@
                 dataName: "data"
             }
         });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var selected = menuTree.getChecked(false, true);
+            var menuIds = [];
+            layui.each(selected, function (key, item) {
+                menuIds.push(item.id)
+            });
+
+            data.field.menuIds = menuIds.join(',');
+            if (!menuIds.length) {
+                febs.modal.confirm('提示', '当前角色未授予任何权限，是否继续？', function () {
+                    addOrUpdateRole(data);
+                });
+            } else {
+                addOrUpdateRole(data);
+            }
+            return false;
+        });
+
+        var addOrUpdateRole = function (data) {
+            $.post("/role", data.field, function (data) {
+                if (data.status >= 300) {
+                    layer.msg(data.msg);//失败的表情
+                    return;
+                } else {
+                    layer.msg("申请提交成功", {
+                        icon: 6,//成功的表情
+                        time: 500 //1秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                        parent.layui.table.reload("currentTableId");
+                    })
+                }
+            });
+            
+        }
+
     });
 </script>
 </body>
