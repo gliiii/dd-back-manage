@@ -2,19 +2,23 @@ package com.glii.ddbackmanage.service.impl;
 
 import com.glii.ddbackmanage.entity.Dept;
 import com.glii.ddbackmanage.entity.User;
+import com.glii.ddbackmanage.entity.UserRole;
 import com.glii.ddbackmanage.form.UserForm;
 import com.glii.ddbackmanage.mapper.DeptMapper;
 import com.glii.ddbackmanage.mapper.UserMapper;
 import com.glii.ddbackmanage.pojo.QueryRequst;
+import com.glii.ddbackmanage.service.UserRoleService;
 import com.glii.ddbackmanage.service.UserService;
 import com.glii.ddbackmanage.utils.Md5Util;
 import com.glii.ddbackmanage.utils.PageCalculatorUtil;
 import com.glii.ddbackmanage.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private DeptMapper deptMapper;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public List<UserVO> findUserDetailList(UserForm user, QueryRequst query) {
@@ -88,13 +95,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer updateUser(UserForm userForm) {
+    public void updateUser(UserForm userForm) {
         User user = new User();
         Date now = new Date();
         BeanUtils.copyProperties(userForm, user);
         user.setModifyTime(now);
+        userMapper.updateUser(user);
+        Long[] userIds = {user.getUserId()};
+        userRoleService.deleteUserRoleByRoleIds(userIds);
+        String[] roles = StringUtils.splitByWholeSeparatorPreserveAllTokens(user.getRoleId(), ",");
+        List<UserRole> userRoles = new ArrayList<>();
+        Arrays.stream(roles).forEach(roleId -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getUserId());
+            userRole.setRoleId(Long.valueOf(roleId));
+            userRoles.add(userRole);
+        });
+        userRoleService.batchInsertUserRole(userRoles);
         //TODO 对于失败异常情况的处理
-        return userMapper.updateUser(user);
     }
 
     @Override

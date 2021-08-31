@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glii.ddbackmanage.mapper.UserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.glii.ddbackmanage.entity.UserRole">
+        <id column="USER_ID" property="userId"/>
+        <result column="ROLE_ID" property="roleId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        USER_ID,ROLE_ID
+    </sql>
+
+    <!--批量新增角色-->
+    <insert id="batchInsertUserRole" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="roleId">
+        INSERT INTO t_user_role
+        (USER_ID, ROLE_ID)
+        VALUES
+        <foreach collection ="list" item="item" separator =",">
+            (#{item.userId}, #{item.roleId})
+        </foreach >
+    </insert>
+
+    <!--批量删除角色菜单-->
+    <delete id="deleteUserRoleByRoleIds" parameterType="java.lang.Long">
+        DELETE FROM t_user_role
+        WHERE USER_ID IN
+        <foreach collection="array" item="userId" open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

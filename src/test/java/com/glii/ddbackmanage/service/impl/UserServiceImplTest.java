@@ -55,8 +55,7 @@ class UserServiceImplTest extends DdBackManageApplicationTests {
         UserForm userForm = new UserForm();
         userForm.setUserId(24L);
         userForm.setEmail("789@789.com");
-        Integer result = userService.updateUser(userForm);
-        System.out.println(result);
+        userService.updateUser(userForm);
     }
 
     @Test

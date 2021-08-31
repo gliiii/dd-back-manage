@@ -27,4 +27,7 @@ public class UserForm {
     private String createTimeFrom;
 
     private String createTimeTo;
+
+    private String roleId;
+    private String roleName;
 }

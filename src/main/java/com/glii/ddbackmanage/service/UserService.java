@@ -48,7 +48,7 @@ public interface UserService {
      * @param userForm
      * @return
      */
-    Integer updateUser(UserForm userForm);
+    void updateUser(UserForm userForm);
 
     /**
      * 根据用户id删除用户
