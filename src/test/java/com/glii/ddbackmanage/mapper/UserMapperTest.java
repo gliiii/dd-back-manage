@@ -50,7 +50,7 @@ class UserMapperTest extends DdBackManageApplicationTests {
 
     @Test
     void findUserById() {
-        User user = userMapper.findUserById(24L);
+        User user = userMapper.findUserById(7L);
         System.out.println(user);
     }
 

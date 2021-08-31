@@ -37,6 +37,10 @@
                        class="layui-input" placeholder="请输入邮箱">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">角色：</label>
+            <div class="layui-input-block" id="user-update-role"></div>
+        </div>
         <!--TODO 需要考虑必输项-->
         <div class="layui-form-item">
             <label class="layui-form-label required">部门：</label>
@@ -80,7 +84,9 @@
             xmSelect = layui.xmSelect,
             $ = layui.$,
             user = [[${user}]],
+            roleXmSelect,
             deptXmlSelect;
+
         //渲染部门列表
         deptXmlSelect = xmSelect.render({
             el: '#dept',
@@ -110,6 +116,30 @@
         $.get("/dept/select/tree", null, function (data) {
             deptXmlSelect.update(data);
             user.deptId && deptXmlSelect.setValue([user.deptId]);
+        });
+
+        //渲染角色列表
+        roleXmSelect = xmSelect.render({
+            el: '#user-update-role',
+            toolbar: {show: true},
+            name: 'roleId',
+            theme: {
+                color: '#32c787',
+            },
+            prop: {
+                name: 'roleName',
+                value: 'roleId'
+            },
+            height: '100px',
+            data: []
+        });
+
+        $.get("/role/select/tree", null, function (data) {
+            roleXmSelect.update({
+                data: data.data,
+                autoRow: true,
+            });
+            roleXmSelect.setValue(user.roleId.split(','));
         });
 
         //监听提交

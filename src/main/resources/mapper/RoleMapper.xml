@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ROLE_ID,ROLE_NAME,REMARK,CREATE_TIME,MODIFY_TIME,MENU_IDS
+        ROLE_ID,ROLE_NAME,REMARK,CREATE_TIME,MODIFY_TIME
     </sql>
 
     <!--查询角色列表-->
@@ -108,4 +108,11 @@
             #{roleId}
         </foreach>
     </delete>
+
+    <!--查询所有角色-->
+    <select id="findRoles" resultType="com.glii.ddbackmanage.entity.Role">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_role
+    </select>
 </mapper>

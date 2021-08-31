@@ -1,5 +1,6 @@
 package com.glii.ddbackmanage.service;
 
+import com.glii.ddbackmanage.entity.Role;
 import com.glii.ddbackmanage.form.RoleForm;
 import com.glii.ddbackmanage.pojo.QueryRequst;
 import com.glii.ddbackmanage.vo.RoleVO;
@@ -48,4 +49,10 @@ public interface RoleService {
      * @return
      */
     void deleteRoleByIds(List<Long> roleIds);
+
+    /**
+     * 查询所有角色
+     * @return
+     */
+    List<Role> findRoles();
 }

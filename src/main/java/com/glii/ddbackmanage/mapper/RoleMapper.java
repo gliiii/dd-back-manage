@@ -17,6 +17,12 @@ public interface RoleMapper {
     List<Role> findRoleList(@Param("role") RoleForm role, @Param("rowIndex") int rowIndex, @Param("pageSize") int pageSize );
 
     /**
+     * 查询所有角色
+     * @return
+     */
+    List<Role> findRoles();
+
+    /**
      * 查询用户总数
      * @return
      */

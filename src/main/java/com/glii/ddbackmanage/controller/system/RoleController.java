@@ -1,5 +1,6 @@
 package com.glii.ddbackmanage.controller.system;
 
+import com.glii.ddbackmanage.entity.Role;
 import com.glii.ddbackmanage.form.RoleForm;
 import com.glii.ddbackmanage.pojo.QueryRequst;
 import com.glii.ddbackmanage.service.RoleService;
@@ -16,6 +17,12 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+
+    @GetMapping("/role/select/tree")
+    public ResultVO getAllRoles() {
+        List<Role> roles = roleService.findRoles();
+        return ResultVOUtil.success(roles);
+    }
 
     @GetMapping("/roles")
     public ResultVO roleList(RoleForm roleForm, QueryRequst query) {

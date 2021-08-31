@@ -54,4 +54,10 @@ class RoleMapperTest extends DdBackManageApplicationTests {
         Integer result = roleMapper.deleteRoleByIds(list);
         System.out.println(result);
     }
+
+    @Test
+    void findRoles() {
+        List<Role> roles = roleMapper.findRoles();
+        System.out.println(roles);
+    }
 }

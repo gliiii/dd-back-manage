@@ -71,4 +71,7 @@ public class User {
     private String theme;
     private String isTab;
     private String description;
+
+    private String roleId;
+    private String roleName;
 }
