@@ -135,7 +135,7 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'delete') { // 监听删除操作
                 let ids = common.checkField(obj,'id');
                 if (common.isEmpty(ids)) {
                     popup.warning("未选中数据");
@@ -145,7 +145,7 @@
                     layer.close(index);
                     let loading = layer.load();
                     $.ajax({
-                        url: "/users/" + ids,
+                        url: "/roles/" + ids,
                         dataType: 'json',
                         type: 'delete',
                         success: function (data) {
@@ -190,7 +190,7 @@
                     layer.close(index);
                     let loading = layer.load();
                     $.ajax({
-                        url: "/user/"+obj.data['id'],
+                        url: "/roles/"+obj.data['id'],
                         dataType: 'json',
                         type: 'delete',
                         success:function(data){

@@ -35,4 +35,10 @@ public class RoleController {
         roleService.updateRole(roleForm);
         return ResultVOUtil.success();
     }
+
+    @DeleteMapping("/roles/{ids}")
+    public ResultVO batchDeleteRole(@PathVariable("ids") List<Long> roleIds) {
+        roleService.deleteRoleByIds(roleIds);
+        return ResultVOUtil.success();
+    }
 }

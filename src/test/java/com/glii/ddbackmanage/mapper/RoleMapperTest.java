@@ -6,6 +6,7 @@ import com.glii.ddbackmanage.form.RoleForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,14 @@ class RoleMapperTest extends DdBackManageApplicationTests {
         role.setRoleId(83L);
         role.setModifyTime(new Date());
         Integer result = roleMapper.updateRole(role);
+        System.out.println(result);
+    }
+
+    @Test
+    void deleteRoleByIds() {
+        List<Long> list = new ArrayList();
+        list.add(84L);
+        Integer result = roleMapper.deleteRoleByIds(list);
         System.out.println(result);
     }
 }

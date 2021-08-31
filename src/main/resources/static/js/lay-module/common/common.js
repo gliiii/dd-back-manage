@@ -4,7 +4,7 @@ layui.define(["layer", "jquery","table"], function (exports) {
     var $ = layui.jquery;
     var table = layui.table;
     var obj = {
-        checkField: function(obj, field) {debugger
+        checkField: function(obj, field) {
             let data = table.checkStatus(obj.config.id).data;
             if (data.length === 0) {
                 return "";

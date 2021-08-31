@@ -55,5 +55,5 @@ public interface RoleMapper {
      * @param roleIds
      * @return
      */
-    Integer deleteRoleByIds(Long[] roleIds);
+    Integer deleteRoleByIds(List<Long> roleIds);
 }

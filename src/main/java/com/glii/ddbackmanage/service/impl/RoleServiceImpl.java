@@ -76,6 +76,12 @@ public class RoleServiceImpl implements RoleService {
         saveRoleMenus(role);
     }
 
+    @Override
+    public void deleteRoleByIds(List<Long> roleIds) {
+        roleMapper.deleteRoleByIds(roleIds);
+        roleMenuService.deleteRoleMenuByRoleIds(roleIds);
+    }
+
     private void saveRoleMenus(Role role) {
         if (StringUtils.isNotBlank(role.getMenuIds())) {
             String[] menuIds = role.getMenuIds().split(",");

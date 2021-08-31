@@ -41,4 +41,11 @@ public interface RoleService {
      * @return
      */
     void updateRole(RoleForm roleForm);
+
+    /**
+     * 批量删除角色
+     * @param roleIds
+     * @return
+     */
+    void deleteRoleByIds(List<Long> roleIds);
 }

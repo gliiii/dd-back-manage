@@ -99,4 +99,13 @@
         </set>
         WHERE ROLE_ID = #{role.roleId}
     </update>
+
+    <!--批量删除角色-->
+    <delete id="deleteRoleByIds" parameterType="java.lang.Long">
+        DELETE FROM t_role
+        WHERE ROLE_ID IN
+        <foreach collection="list"  item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </delete>
 </mapper>
