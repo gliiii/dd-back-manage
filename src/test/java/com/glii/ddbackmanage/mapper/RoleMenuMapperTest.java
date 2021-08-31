@@ -29,4 +29,12 @@ class RoleMenuMapperTest extends DdBackManageApplicationTests {
         System.out.println(roleMenus);
         roleMenuMapper.batchInsertRoleMenu(roleMenus);
     }
+
+    @Test
+    void deleteRoleMenuByRoleIds() {
+        List<Long> list = new ArrayList();
+        list.add(83L);
+        Integer result = roleMenuMapper.deleteRoleMenuByRoleIds(list);
+        System.out.println(result);
+    }
 }

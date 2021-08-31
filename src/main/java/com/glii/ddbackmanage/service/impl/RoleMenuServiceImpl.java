@@ -18,4 +18,9 @@ public class RoleMenuServiceImpl implements RoleMenuService {
     public Integer batchAddRoleMenu(List<RoleMenu> roleMenus) {
         return roleMenuMapper.batchInsertRoleMenu(roleMenus);
     }
+
+    @Override
+    public Integer deleteRoleMenuByRoleIds(List<Long> roleIds) {
+        return roleMenuMapper.deleteRoleMenuByRoleIds(roleIds);
+    }
 }

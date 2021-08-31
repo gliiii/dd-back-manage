@@ -27,4 +27,18 @@ public interface RoleService {
      * @return
      */
     void addRole(RoleForm roleForm);
+
+    /**
+     * 根据角色id查询用户信息
+     * @param roleId
+     * @return
+     */
+    RoleVO findRoleById(Long roleId);
+
+    /**
+     * 更新角色
+     * @param roleForm
+     * @return
+     */
+    void updateRole(RoleForm roleForm);
 }

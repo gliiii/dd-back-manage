@@ -2,6 +2,7 @@ package com.glii.ddbackmanage.controller;
 
 import com.glii.ddbackmanage.service.DeptService;
 import com.glii.ddbackmanage.service.MenuService;
+import com.glii.ddbackmanage.service.RoleService;
 import com.glii.ddbackmanage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class PageController {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -76,5 +80,16 @@ public class PageController {
     @GetMapping("/role_add")
     public String role_add() {
         return "pages/role/role-add";
+    }
+
+    @GetMapping("/role/{id}")
+    public ModelAndView role_edit(@PathVariable("id") Long roleId) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("pages/role/role-edit");
+        mv.addObject("role", roleService.findRoleById(roleId));
+
+        System.out.println(roleService.findRoleById(roleId));
+
+        return mv;
     }
 }

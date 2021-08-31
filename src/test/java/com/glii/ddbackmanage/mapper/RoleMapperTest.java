@@ -30,4 +30,19 @@ class RoleMapperTest extends DdBackManageApplicationTests {
         Integer result = roleMapper.insertRole(role);
         System.out.println(result);
     }
+
+    @Test
+    void findRoleById() {
+        Role role = roleMapper.findRoleById(81L);
+        System.out.println(role);
+    }
+
+    @Test
+    void updateRole() {
+        Role role = new Role();
+        role.setRoleId(83L);
+        role.setModifyTime(new Date());
+        Integer result = roleMapper.updateRole(role);
+        System.out.println(result);
+    }
 }

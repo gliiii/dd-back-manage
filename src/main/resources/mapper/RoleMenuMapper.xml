@@ -22,5 +22,12 @@
         </foreach >
     </insert>
 
-
+    <!--批量删除角色菜单-->
+    <delete id="deleteRoleMenuByRoleIds" parameterType="java.lang.Long">
+        DELETE FROM t_role_menu
+        WHERE ROLE_ID IN
+        <foreach collection="list" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </delete>
 </mapper>

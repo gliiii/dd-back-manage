@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+    <link rel="stylesheet" href="/js/lay-module/eleTree/eleTree.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form">
+    <div class="layui-form layuimini-form">
+        <input type="hidden" name="id" th:value="${role.roleId}">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">角色名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="roleName" th:value="${role.roleName}" lay-verify="required" lay-reqtext="角色名称不能为空" placeholder="请输入角色名称"
+                       value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">角色描述：</label>
+            <div class="layui-input-block">
+                <textarea name="remark" th:text="${role.remark}" maxlength="100" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色权限：</label>
+            <div class="layui-input-block menu-tree" style="margin-top: .8rem;"></div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="/js/lay-config.js?v=1.4.5" charset="utf-8"></script>
+<script th:inline="javascript">
+    layui.use(['form', 'eleTree'], function () {
+        var $ = layui.$,
+            form = layui.form,
+            eleTree = layui.eleTree
+
+        var menuTree = eleTree.render({
+            elem: '.menu-tree',
+            url: '/menu/eletree',
+            showCheckbox: true,
+            where: {
+                "invalidate_ie_cache": new Date()
+            },
+            accordion: true,
+            checkStrictly: true,
+            renderAfterExpand: false,
+            request: {
+                name: "title",
+                key: "id",
+                children: "childs",
+                checked: "checked",
+                data: "data"
+            },
+            response: {
+                statusName: "code",
+                statusCode: 200,
+                dataName: "data"
+            },
+            done: function(res) { //数据请求完成的回调函数，只有异步请求才会有
+                // res即为你接口返回的信息。
+                if ([[${role.menuIds}]]) {
+                    menuTree.setChecked([[${role.menuIds}]].split(','), true);
+                } else {
+                    menuTree.setChecked([], true);
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var selected = menuTree.getChecked(false, true);
+            var menuIds = [];
+            layui.each(selected, function (key, item) {
+                menuIds.push(item.id)
+            });
+
+            data.field.menuIds = menuIds.join(',');
+            if (!menuIds.length) {
+                febs.modal.confirm('提示', '当前角色未授予任何权限，是否继续？', function () {
+                    addOrUpdateRole(data);
+                });
+            } else {
+                addOrUpdateRole(data);
+            }
+            return false;
+        });
+
+        var addOrUpdateRole = function (data) {
+            $.ajax({
+                url: "/role",
+                type: 'put',
+                dataType: 'json',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(data.field),
+                beforeSend: function () {
+                    this.layerIndex = layer.load(0, {shade: [0.5, '#393D49']});
+                },
+                success: function (data) {
+                    layer.close(this.layerIndex);
+                    if (data.status >= 300) {
+                        layer.msg(data.msg);//失败的表情
+                        return;
+                    } else {
+                        layer.msg("角色信息修改成功", {
+                            icon: 6,//成功的表情
+                            time: 500 //1秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                            parent.layui.table.reload("currentTableId");
+                        })
+                    }
+                }
+            })
+            return false;
+            
+        }
+
+    });
+</script>
+</body>
+</html>

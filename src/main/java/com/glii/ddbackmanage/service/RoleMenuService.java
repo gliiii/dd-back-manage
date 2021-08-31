@@ -11,4 +11,11 @@ public interface RoleMenuService {
      * @return
      */
     Integer batchAddRoleMenu(List<RoleMenu> roleMenus);
+
+    /**
+     * 批量删除角色菜单
+     * @param roleIds
+     * @return
+     */
+    Integer deleteRoleMenuByRoleIds(List<Long> roleIds);
 }

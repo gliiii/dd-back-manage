@@ -1,7 +1,6 @@
 package com.glii.ddbackmanage.mapper;
 
 import com.glii.ddbackmanage.entity.Role;
-import com.glii.ddbackmanage.entity.User;
 import com.glii.ddbackmanage.form.RoleForm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,7 +34,7 @@ public interface RoleMapper {
      * @param roleId
      * @return
      */
-    User findRoleById(Long roleId);
+    Role findRoleById(@Param("roleId") Long roleId);
 
     /**
      * 更新角色

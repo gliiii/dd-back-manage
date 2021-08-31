@@ -56,6 +56,26 @@ public class RoleServiceImpl implements RoleService {
         saveRoleMenus(role);
     }
 
+    @Override
+    public RoleVO findRoleById(Long roleId) {
+        Role role = roleMapper.findRoleById(roleId);
+        RoleVO roleVO = new RoleVO();
+        BeanUtils.copyProperties(role, roleVO);
+        return roleVO;
+    }
+
+    @Override
+    public void updateRole(RoleForm roleForm) {
+        Role role = new Role();
+        BeanUtils.copyProperties(roleForm, role);
+        role.setModifyTime(new Date());
+        roleMapper.updateRole(role);
+        List<Long> roleIds = new ArrayList();
+        roleIds.add(role.getRoleId());
+        roleMenuService.deleteRoleMenuByRoleIds(roleIds);
+        saveRoleMenus(role);
+    }
+
     private void saveRoleMenus(Role role) {
         if (StringUtils.isNotBlank(role.getMenuIds())) {
             String[] menuIds = role.getMenuIds().split(",");

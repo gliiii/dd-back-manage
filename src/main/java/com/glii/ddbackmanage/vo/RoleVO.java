@@ -37,5 +37,5 @@ public class RoleVO {
     /**
      * 角色对应的菜单（按钮） id
      */
-    private transient String menuIds;
+    private String menuIds;
 }

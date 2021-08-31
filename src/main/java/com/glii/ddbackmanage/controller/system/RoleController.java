@@ -7,9 +7,7 @@ import com.glii.ddbackmanage.utils.ResultVOUtil;
 import com.glii.ddbackmanage.vo.ResultVO;
 import com.glii.ddbackmanage.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +27,12 @@ public class RoleController {
     @PostMapping("/role")
     public ResultVO addRole(RoleForm roleForm) {
         roleService.addRole(roleForm);
+        return ResultVOUtil.success();
+    }
+
+    @PutMapping("/role")
+    public ResultVO updateRole(@RequestBody RoleForm roleForm) {
+        roleService.updateRole(roleForm);
         return ResultVOUtil.success();
     }
 }

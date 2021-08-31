@@ -1,12 +1,17 @@
 package com.glii.ddbackmanage.form;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
 public class RoleForm {
-
+    /**
+     * 角色ID
+     */
+    @JsonAlias("id")
+    private Long roleId;
     /**
      * 角色名称
      */
