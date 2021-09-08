@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>menu</title>
+    <link rel="stylesheet" href="/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+    <style>
+        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <!--        <blockquote class="layui-elem-quote">-->
+        <!--            Layui的树形表格treeTable，支持异步加载(懒加载)、复选框联动、折叠状态记忆。<br>-->
+        <!--            <a href="https://gitee.com/whvse/treetable-lay" target="_blank" class="layui-btn layui-btn-danger">treetable-lay</a>-->
+        <!--        </blockquote>-->
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部门名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="deptName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon layui-icon-search"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-normal"><i class="layui-icon layui-icon-refresh"></i> 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table id="dept-table" class="layui-table" lay-filter="deptTableFilter"></table>
+
+    </div>
+</div>
+
+<script type="text/html" id="dept-toolbar">
+    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加部门 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="expand"> 全部展开 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-warm data-delete-btn" lay-event="fold"> 全部折叠 </button>
+</script>
+
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<!--<script type="text/html" id="icon">-->
+<!--    <i class="fa {{d.icon}}"></i>-->
+<!--</script>-->
+
+<script type="text/html" id="menu-type">
+    {{#if (d.type == '0') { }}
+    <span>目录</span>
+    {{# }else if(d.type == '1'){ }}
+    <span>菜单</span>
+    {{# }else if(d.type == '2'){ }}
+    <span>按钮</span>
+    {{# } }}
+</script>
+
+<script src="/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<script>
+    layui.use(['table', 'treetable','common','popup','form'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+        var common = layui.common;
+        var popup = layui.popup;
+        var form = layui.form;
+
+        // 渲染表格
+        layer.load(2);
+        window.render = function () {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'deptId',
+                treePidName: 'parentId',
+                elem: '#dept-table',
+                treeDefaultClose: true,
+                url: '/dept/tree',
+                toolbar: '#dept-toolbar',
+                page: false,
+                cols: [
+                    [
+                        {type: 'checkbox'},
+                        {field: 'deptName', title: '部门名称'},
+                        {field: 'createTime', title: '创建时间'},
+                        {templet: '#auth-state', width: 120, align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        }
+
+        render();
+
+        table.on('toolbar(deptTableFilter)', function (obj) {
+            if (obj.event === 'add') {
+                window.add();
+            } else if (obj.event === 'expand') {
+                treetable.expandAll('#dept-table');
+            } else if (obj.event === 'fold') {
+                treetable.foldAll('#dept-table');
+            }
+        });
+
+        window.add = function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shade: 0.1,
+                area: ['500px', '500px'],
+                content: '/dept_add'
+            });
+        }
+
+        window.edit = function (obj) {
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade: 0.1,
+                area: ['500px', '500px'],
+                // content: '/menu_edit?menuId=' + obj.data['menuId']
+                content: "/menu_edit?menuId="+obj.data['menuId']
+            });
+        }
+
+        //搜索
+        form.on('submit(data-search-btn)', function (data) {
+            var keyword = data.field.menuName;
+            var $tds = $('#munu-table').next('.treeTable').find('.layui-table-body tbody tr td');
+            if (!keyword) {
+                $tds.css('background-color', 'transparent');
+                layer.msg("请输入关键字", {icon: 5});
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                $(this).css('background-color', 'transparent');
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        $('body,html').stop(true);
+                        $('body,html').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            } else {
+                treetable.expandAll('#dept-table');
+            }
+            return false;
+        });
+
+        //监听工具条
+        table.on('tool(deptTableFilter)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/menu/"+obj.data['id'],
+                        dataType: 'json',
+                        type: 'delete',
+                        success:function(data){
+                            layer.close(loading);
+                            if (data.status >= 200) {
+                                popup.failure(data.msg);
+                            } else {
+                                obj.del();
+                                popup.success(data.msg,function(){
+                                });
+                            }
+                        }
+                    })
+                });
+
+
+            } else if (layEvent === 'edit') {
+                window.edit(obj);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -87,9 +87,17 @@ public class PageController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("pages/role/role-edit");
         mv.addObject("role", roleService.findRoleById(roleId));
-
-        System.out.println(roleService.findRoleById(roleId));
-
         return mv;
     }
+
+    @GetMapping("/dept")
+    public String dept() {
+        return "pages/dept/table-dept";
+    }
+
+    @GetMapping("/dept_add")
+    public String dept_add() {
+        return "pages/dept/dept-add";
+    }
+
 }

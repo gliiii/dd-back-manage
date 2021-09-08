@@ -24,4 +24,20 @@
         FROM t_dept
     </select>
 
+    <!--新增部门-->
+    <insert id="insertDept" parameterType="com.glii.ddbackmanage.entity.Dept">
+        INSERT INTO t_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId !=null">PARENT_ID,</if>
+            <if test="deptName !=null">DEPT_NAME,</if>
+            <if test="orderNum !=null">ORDER_NUM,</if>
+            <if test="createTime !=null">CREATE_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId !=null">#{parentId},</if>
+            <if test="deptName !=null">#{deptName},</if>
+            <if test="orderNum !=null">#{orderNum},</if>
+            <if test="createTime !=null">#{createTime},</if>
+        </trim>
+    </insert>
 </mapper>

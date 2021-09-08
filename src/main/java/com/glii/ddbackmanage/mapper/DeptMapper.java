@@ -18,4 +18,11 @@ public interface DeptMapper {
      * @return
      */
     List<Dept> findDeptList();
+
+    /**
+     * 新增部门
+     * @param dept
+     * @return
+     */
+    Integer insertDept(Dept dept);
 }

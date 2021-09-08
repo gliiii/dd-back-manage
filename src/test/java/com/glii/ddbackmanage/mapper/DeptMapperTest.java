@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 class DeptMapperTest extends DdBackManageApplicationTests {
@@ -23,5 +24,16 @@ class DeptMapperTest extends DdBackManageApplicationTests {
     void findDeptList() {
         List<Dept> deptList = deptMapper.findDeptList();
         System.out.println(deptList);
+    }
+
+    @Test
+    void insertDept() {
+        Dept dept = new Dept();
+        dept.setParentId(1L);
+        dept.setDeptName("开发三部");
+        dept.setOrderNum(3L);
+        dept.setCreateTime(new Date());
+        Integer result = deptMapper.insertDept(dept);
+        System.out.println(result);
     }
 }

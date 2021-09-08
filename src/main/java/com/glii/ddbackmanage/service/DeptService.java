@@ -18,4 +18,11 @@ public interface DeptService {
      * @return
      */
     List<DeptTree<Dept>> findDeptTree();
+
+    /**
+     *
+     * @param dept
+     * @return
+     */
+    Integer addDept(Dept dept);
 }

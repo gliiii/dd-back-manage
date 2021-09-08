@@ -8,7 +8,7 @@ public class Dept {
     private Long deptId;
     private Long parentId;
     private String deptName;
-    private Long orderNunm;
+    private Long orderNum;
     private Date createTime;
     private Date modifyTime;
 }

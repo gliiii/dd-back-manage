@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,12 @@ public class DeptServiceImpl implements DeptService {
         List<Dept> deptList = deptMapper.findDeptList();
         List<DeptTree<Dept>> trees = convertDept(deptList);
         return TreeUtil.buildDeptTree(trees);
+    }
+
+    @Override
+    public Integer addDept(Dept dept) {
+        dept.setCreateTime(new Date());
+        return deptMapper.insertDept(dept);
     }
 
     private List<DeptTree<Dept>> convertDept(List<Dept> deptList) {

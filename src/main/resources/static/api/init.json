@@ -41,7 +41,7 @@
             },
             {
               "title": "部门管理",
-              "href": "page/welcome-3.html",
+              "href": "/dept",
               "icon": "fa fa-tachometer",
               "target": "_self"
             }
