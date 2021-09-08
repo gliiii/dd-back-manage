@@ -36,4 +36,19 @@ class DeptMapperTest extends DdBackManageApplicationTests {
         Integer result = deptMapper.insertDept(dept);
         System.out.println(result);
     }
+
+    @Test
+    void updateDept() {
+        Dept dept = new Dept();
+        dept.setDeptId(12L);
+        dept.setModifyTime(new Date());
+        Integer result = deptMapper.updateDept(dept);
+        System.out.println(result);
+    }
+
+    @Test
+    void findDeptById() {
+        Dept dept = deptMapper.findDeptById(12L);
+        System.out.println(dept);
+    }
 }

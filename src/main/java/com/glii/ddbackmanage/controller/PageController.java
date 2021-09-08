@@ -100,4 +100,10 @@ public class PageController {
         return "pages/dept/dept-add";
     }
 
+    @GetMapping("/dept_edit")
+    public String dept_edit(Model model, Long deptId){
+        model.addAttribute("dept", deptService.findDeptById(deptId));
+        return "pages/dept/dept-edit";
+    }
+
 }

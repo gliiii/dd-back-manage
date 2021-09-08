@@ -49,9 +49,20 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    public Dept findDeptById(Long deptId) {
+        return deptMapper.findDeptById(deptId);
+    }
+
+    @Override
     public Integer addDept(Dept dept) {
         dept.setCreateTime(new Date());
         return deptMapper.insertDept(dept);
+    }
+
+    @Override
+    public Integer updateDept(Dept dept) {
+        dept.setModifyTime(new Date());
+        return deptMapper.updateDept(dept);
     }
 
     private List<DeptTree<Dept>> convertDept(List<Dept> deptList) {

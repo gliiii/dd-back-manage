@@ -18,10 +18,19 @@
         </foreach>
     </select>
 
+    <select id="findDeptById" parameterType="java.lang.Long" resultType="com.glii.ddbackmanage.entity.Dept">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_dept
+        WHERE
+        DEPT_ID = #{deptId}
+    </select>
+
     <select id="findDeptList" resultType="com.glii.ddbackmanage.entity.Dept">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_dept
+        ORDER BY ORDER_NUM
     </select>
 
     <!--新增部门-->
@@ -40,4 +49,23 @@
             <if test="createTime !=null">#{createTime},</if>
         </trim>
     </insert>
+
+    <update id="updateDept" parameterType="com.glii.ddbackmanage.entity.Dept">
+        UPDATE t_dept
+        <set>
+            <if test="parentId !=null">
+                PARENT_ID = #{parentId},
+            </if>
+            <if test="deptName !=null">
+                DEPT_NAME = #{deptName},
+            </if>
+            <if test="orderNum !=null">
+                ORDER_NUM = #{orderNum},
+            </if>
+            <if test="modifyTime !=null">
+                MODIFY_TIME =#{modifyTime}
+            </if>
+        </set>
+        WHERE DEPT_ID = #{deptId}
+    </update>
 </mapper>

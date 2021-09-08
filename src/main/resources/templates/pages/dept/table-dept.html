@@ -138,14 +138,14 @@
                 shade: 0.1,
                 area: ['500px', '500px'],
                 // content: '/menu_edit?menuId=' + obj.data['menuId']
-                content: "/menu_edit?menuId="+obj.data['menuId']
+                content: "/dept_edit?deptId="+obj.data['deptId']
             });
         }
 
         //搜索
         form.on('submit(data-search-btn)', function (data) {
-            var keyword = data.field.menuName;
-            var $tds = $('#munu-table').next('.treeTable').find('.layui-table-body tbody tr td');
+            var keyword = data.field.deptName;
+            var $tds = $('#dept-table').next('.treeTable').find('.layui-table-body tbody tr td');
             if (!keyword) {
                 $tds.css('background-color', 'transparent');
                 layer.msg("请输入关键字", {icon: 5});

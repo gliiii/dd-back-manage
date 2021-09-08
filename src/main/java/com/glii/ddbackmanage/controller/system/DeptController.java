@@ -8,10 +8,7 @@ import com.glii.ddbackmanage.vo.DeptVO;
 import com.glii.ddbackmanage.vo.ResultTreeVO;
 import com.glii.ddbackmanage.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +37,12 @@ public class DeptController {
         return ResultVOUtil.success();
     }
 
+    @PutMapping
+    public ResultVO updateDept(Dept dept) {
+        deptService.updateDept(dept);
+        return ResultVOUtil.success();
+    }
+
     @GetMapping("/selectParent")
     public ResultTreeVO selectParent() {
         List<DeptVO> deptList = deptService.findDeptList();
@@ -47,5 +50,7 @@ public class DeptController {
         resultTreeVO.setData(deptList);
         return resultTreeVO;
     }
+
+
 
 }
