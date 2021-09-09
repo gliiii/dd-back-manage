@@ -174,13 +174,14 @@
         //监听工具条
         table.on('tool(deptTableFilter)', function (obj) {
             var data = obj.data;
+            console.log(data)
             var layEvent = obj.event;
             if (layEvent === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     layer.close(index);
                     let loading = layer.load();
                     $.ajax({
-                        url: "/menu/"+obj.data['id'],
+                        url: "/dept/"+obj.data['id'],
                         dataType: 'json',
                         type: 'delete',
                         success:function(data){

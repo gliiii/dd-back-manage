@@ -39,4 +39,11 @@ public interface DeptService {
      * @return
      */
     Integer updateDept(Dept dept);
+
+    /**
+     * 删除部门信息
+     * @param deptId
+     * @return
+     */
+    Integer deleteDept(Long deptId);
 }

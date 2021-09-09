@@ -51,4 +51,10 @@ class DeptMapperTest extends DdBackManageApplicationTests {
         Dept dept = deptMapper.findDeptById(12L);
         System.out.println(dept);
     }
+
+    @Test
+    void deleteDeptById() {
+        Integer result = deptMapper.deleteDeptById(12L);
+        System.out.println(result);
+    }
 }

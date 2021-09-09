@@ -65,6 +65,11 @@ public class DeptServiceImpl implements DeptService {
         return deptMapper.updateDept(dept);
     }
 
+    @Override
+    public Integer deleteDept(Long deptId) {
+        return deptMapper.deleteDeptById(deptId);
+    }
+
     private List<DeptTree<Dept>> convertDept(List<Dept> deptList) {
         List<DeptTree<Dept>> trees = new ArrayList<>();
         deptList.forEach(dept -> {

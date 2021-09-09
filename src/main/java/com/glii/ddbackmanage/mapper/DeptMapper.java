@@ -39,4 +39,11 @@ public interface DeptMapper {
      * @return
      */
     Integer updateDept(Dept dept);
+
+    /**
+     * 根据deptId删除部门信息
+     * @param deptId
+     * @return
+     */
+    Integer deleteDeptById(Long deptId);
 }

@@ -68,4 +68,9 @@
         </set>
         WHERE DEPT_ID = #{deptId}
     </update>
+
+    <delete id="deleteDeptById">
+    DELETE FROM t_dept
+    WHERE DEPT_ID = #{deptId}
+    </delete>
 </mapper>

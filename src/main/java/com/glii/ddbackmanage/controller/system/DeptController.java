@@ -43,6 +43,12 @@ public class DeptController {
         return ResultVOUtil.success();
     }
 
+    @DeleteMapping("/{id}")
+    public ResultVO deleteDept(@PathVariable("id") Long deptId) {
+        deptService.deleteDept(deptId);
+        return ResultVOUtil.success();
+    }
+
     @GetMapping("/selectParent")
     public ResultTreeVO selectParent() {
         List<DeptVO> deptList = deptService.findDeptList();
