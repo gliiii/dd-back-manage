@@ -4,12 +4,20 @@ import com.glii.ddbackmanage.service.DeptService;
 import com.glii.ddbackmanage.service.MenuService;
 import com.glii.ddbackmanage.service.RoleService;
 import com.glii.ddbackmanage.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PageController {
@@ -28,7 +36,7 @@ public class PageController {
 
     @GetMapping("/welcome")
     public String welcome() {
-        return "pages/other/welcome" ;
+        return "pages/other/welcome";
     }
 
     @GetMapping("/table_user")
@@ -67,7 +75,7 @@ public class PageController {
     }
 
     @GetMapping("/menu_edit")
-    public String menu_edit(Model model, Long menuId){
+    public String menu_edit(Model model, Long menuId) {
         model.addAttribute("menu", menuService.findMenuById(menuId));
         return "pages/menu/menu-edit";
     }
@@ -101,9 +109,47 @@ public class PageController {
     }
 
     @GetMapping("/dept_edit")
-    public String dept_edit(Model model, Long deptId){
+    public String dept_edit(Model model, Long deptId) {
         model.addAttribute("dept", deptService.findDeptById(deptId));
         return "pages/dept/dept-edit";
     }
+
+    @GetMapping("/loginview")
+    public String login() {
+        System.out.println("登陆页面");
+        return "login";
+    }
+
+    @PostMapping("/user/login")
+    public String login(String username, String password, String code, HttpSession session) {
+        //比较验证码
+        String codes = (String) session.getAttribute("code");
+        try {
+            if (codes.equalsIgnoreCase(code)){
+                //获取主体对象
+                Subject subject = SecurityUtils.getSubject();
+                subject.login(new UsernamePasswordToken(username, password));
+                return "redirect:/index";
+            }else{
+                throw new RuntimeException("验证码错误!");
+            }
+        } catch (UnknownAccountException e) {
+            e.printStackTrace();
+            System.out.println("用户名错误!");
+        } catch (IncorrectCredentialsException e) {
+            e.printStackTrace();
+            System.out.println("密码错误!");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "redirect:/user/loginview";
+    }
+
+    @GetMapping("/index")
+    public String index() {
+        return "index";
+    }
+
 
 }

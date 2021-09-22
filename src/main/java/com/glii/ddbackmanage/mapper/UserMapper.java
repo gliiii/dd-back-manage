@@ -63,4 +63,11 @@ public interface UserMapper {
      * @return
      */
     Integer deleteUserByIds(Long[] userIds);
+
+    /**
+     * 根据用户名查询业务的方法
+     * @param username
+     * @return
+     */
+    User findByUserName(String username);
 }

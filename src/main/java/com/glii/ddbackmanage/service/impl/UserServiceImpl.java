@@ -124,4 +124,9 @@ public class UserServiceImpl implements UserService {
     public Integer deleteUserByIds(Long[] userIds) {
         return userMapper.deleteUserByIds(userIds);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userMapper.findByUserName(username);
+    }
 }

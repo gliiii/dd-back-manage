@@ -213,4 +213,11 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="findByUserName" parameterType="java.lang.String" resultType="com.glii.ddbackmanage.entity.User">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE USERNAME=#{username}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.glii.ddbackmanage.service;
 
+import com.glii.ddbackmanage.entity.User;
 import com.glii.ddbackmanage.form.UserForm;
 import com.glii.ddbackmanage.pojo.QueryRequst;
 import com.glii.ddbackmanage.vo.UserVO;
@@ -63,4 +64,11 @@ public interface UserService {
      * @return
      */
     Integer deleteUserByIds(Long[] userIds);
+
+    /**
+     * 根据用户名查找用户
+     * @param username
+     * @return
+     */
+    User findByUsername(String username);
 }

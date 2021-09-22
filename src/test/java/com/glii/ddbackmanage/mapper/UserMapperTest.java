@@ -78,4 +78,10 @@ class UserMapperTest extends DdBackManageApplicationTests {
         Integer result = userMapper.deleteUserByIds(ids);
         System.out.println(result);
     }
+
+    @Test
+    void findByUserName() {
+        User user = userMapper.findByUserName("Damon");
+        System.out.println(user);
+    }
 }
